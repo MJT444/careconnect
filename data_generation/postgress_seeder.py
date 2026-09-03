@@ -1,5 +1,6 @@
 import csv
 import io
+import os
 import random
 import time
 import uuid
@@ -8,10 +9,14 @@ from decimal import Decimal
 
 from faker import Faker
 from sqlalchemy import create_engine
+from dotenv import load_dotenv
 
 fake = Faker()
+load_dotenv()
 
-DB_URI = "postgresql+psycopg2://username:password@localhost:5432/my_database"
+DB_URI = os.getenv("DB_URI")
+if not DB_URI:
+    raise RuntimeError("DB_URI is missing from the .env file")
 
 NUM_PATIENTS = 10_000
 NUM_CLINICS = 100
@@ -29,16 +34,21 @@ def copy_rows(connection, table, columns, rows):
     )
 
     for row in rows:
-        writer.writerow(row)
+        # Convert True/False booleans to lowercase 'true'/'false' for Postgres COPY compatibility
+        processed_row = [
+            str(item).lower() if isinstance(item, bool) else item for item in row
+        ]
+        writer.writerow(processed_row)
 
     buffer.seek(0)
 
     column_list = ",".join(f'"{column}"' for column in columns)
 
+    # FIX: Cleaned up the delimiter syntax to prevent Postgres one-byte character errors
     copy_sql = f"""
         COPY "{table}" ({column_list})
         FROM STDIN
-        WITH (FORMAT CSV, DELIMITER E'\\t')
+        WITH (FORMAT CSV, DELIMITER '\t')
     """
 
     with connection.cursor() as cursor:
