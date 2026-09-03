@@ -42,7 +42,7 @@ use different field names, update the aggregation pipelines to match.
 Given a patient's coordinates, finds the closest currently-active nurse.
 
 - **Patient coordinates are not stored in Postgres** — the `patients`
-  table (see `sql/01_schema_ddl.sql` on the `anant` branch) has no
+  table (see `sql/01_schema_ddl.sql` — every folder and file is on the main branch) has no
   latitude/longitude column. We assume these are supplied by the client
   app at query time (e.g. live GPS), so the script takes them as
   hardcoded example inputs (`patientLng`, `patientLat`) at the top of
@@ -81,13 +81,27 @@ Computes three statistics over `PatientReviews` in a single pass using
 
 ## Running the scripts
 
-```bash
-docker compose up -d
-docker exec -it medical_mongodb mongosh \
-  "mongodb://admin:password@localhost:27017/medical_db?authSource=admin" \
-  mongo/02_workflow3_geonear.js
+1. **Execute Workflow 3**:
+   ```bash
+   mongosh "mongodb://admin:password@localhost:27017/medical_db?authSource=admin" mongo/02_workflow3_geonear.js
+   ```
+2. **Execute Workflow 4**:
+   ```bash
+   mongosh "mongodb://admin:password@localhost:27017/medical_db?authSource=admin" mongo/03_workflow4_facet.js
+   ```
 
-docker exec -it medical_mongodb mongosh \
-  "mongodb://admin:password@localhost:27017/medical_db?authSource=admin" \
-  mongo/03_workflow4_facet.js
-```
+## EXPLAIN Plans Summary
+
+The detailed execution statistics are saved in `performance/mongo_execution_stats.json`.
+
+**Workflow 3 (`02_workflow3_geonear.js`)**:
+- Uses the `GEO_NEAR_2DSPHERE` stage, backed by the `location_2dsphere` index, to efficiently find nearby nurses without scanning the entire collection.
+- Applies an additional `FETCH` filter for the `ACTIVE` status.
+- Final stages sort by distance and limit the result to 1.
+
+**Workflow 4 (`03_workflow4_facet.js`)**:
+- Initiates with a `COLLSCAN` (Collection Scan) because `$facet` inherently requires scanning all documents to compute multi-faceted aggregations across the entire dataset.
+- Projects the necessary fields (`rating` and `tags`) using `PROJECTION_SIMPLE` before splitting into three parallel sub-pipelines:
+  1. `ratingDistribution`: Uses `$group` and `$sort`.
+  2. `topTags`: Uses `$unwind` on the array, followed by `$group`, `$sort`, and `$limit`.
+  3. `overallAverage`: Uses `$group` to calculate total count and average rating.

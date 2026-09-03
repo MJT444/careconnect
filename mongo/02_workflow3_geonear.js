@@ -1,5 +1,5 @@
-const patientLng = 78;
-const patientLat = 17;
+const patientLng = 78.4867;
+const patientLat = 17.3850;
 const maxDistanceMeters = 5000;
 
 const db = db.getSiblingDB("medical_db");
@@ -17,7 +17,13 @@ const pipeline = [
       query: { status: "ACTIVE" },
     },
   },
-  { $sort: { nurse_id: 1, created_at: -1 } },
+  {
+    $sort:
+    {
+      nurse_id: 1,
+      created_at: -1
+    }
+  },
   {
     $group: {
       _id: "$nurse_id",
@@ -28,14 +34,30 @@ const pipeline = [
       status: { $first: "$status" },
     },
   },
-  { $sort: { distance_meters: 1 } },
-  { $limit: 1 },
+  {
+    $sort:
+    {
+      distance_meters: 1
+    }
+  },
+  {
+    $limit: 1
+  },
   {
     $project: {
       _id: 0,
       nurse_id: 1,
-      distance_meters: { $round: ["$distance_meters", 1] },
-      distance_km: { $round: [{ $divide: ["$distance_meters", 1000] }, 2] },
+      distance_meters: {
+        $round: ["$distance_meters", 1]
+      },
+      distance_km: {
+        $round: [
+          {
+            $divide: ["$distance_meters", 1000]
+          },
+          2
+        ]
+      },
       last_seen: 1,
       location: 1,
     },

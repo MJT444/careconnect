@@ -1,0 +1,82 @@
+{
+    "NursePings": {
+        "$jsonSchema": {
+            "bsonType": "object",
+            "required": [
+                "_id",
+                "created_at",
+                "location",
+                "nurse_id",
+                "status"
+            ],
+            "properties": {
+                "_id": {
+                    "bsonType": "objectId"
+                },
+                "created_at": {
+                    "bsonType": "date"
+                },
+                "location": {
+                    "bsonType": "object",
+                    "properties": {
+                        "coordinates": {
+                            "bsonType": "array",
+                            "items": {
+                                "bsonType": "double"
+                            }
+                        },
+                        "type": {
+                            "bsonType": "string"
+                        }
+                    },
+                    "required": [
+                        "coordinates",
+                        "type"
+                    ]
+                },
+                "nurse_id": {
+                    "bsonType": "string"
+                },
+                "status": {
+                    "bsonType": "string"
+                }
+            }
+        }
+    },
+    "PatientReviews": {
+        "$jsonSchema": {
+            "bsonType": "object",
+            "required": [
+                "_id",
+                "clinic_id",
+                "created_at",
+                "patient_id",
+                "rating",
+                "tags"
+            ],
+            "properties": {
+                "_id": {
+                    "bsonType": "objectId"
+                },
+                "clinic_id": {
+                    "bsonType": "string"
+                },
+                "created_at": {
+                    "bsonType": "date"
+                },
+                "patient_id": {
+                    "bsonType": "string"
+                },
+                "rating": {
+                    "bsonType": "int"
+                },
+                "tags": {
+                    "bsonType": "array",
+                    "items": {
+                        "bsonType": "string"
+                    }
+                }
+            }
+        }
+    }
+}

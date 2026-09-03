@@ -6,7 +6,7 @@ from pymongo import MongoClient
 
 fake = Faker()
 
-MONGO_URI = "mongodb://admin:password@localhost:27017/medical_db?authSource=admin"
+MONGO_URI = "mongodb://localhost:27017/medical_db"
 DB_NAME = "medical_db"
 
 NURSE_COUNT = 500
@@ -14,25 +14,12 @@ TARGET_PINGS = 500_000
 PINGS_PER_NURSE = TARGET_PINGS // NURSE_COUNT
 
 REVIEW_COUNT = 20_000
-
 BATCH_SIZE = 5_000
 
-# Roughly bounding a metro area (Hyderabad) so pings/searches land near
-# each other instead of being scattered across the whole globe. Kept
-# tight (~3km spread) so that most nurses fall within Workflow 3's 5km
-# search radius — a wider spread means many/most $geoNear queries would
-# return empty results, which looks like a bug during a live demo even
-# though it isn't one.
 CENTER_LAT = 17.3850
 CENTER_LNG = 78.4867
-JITTER_DEGREES = 0.03  # ~3km spread
+JITTER_DEGREES = 0.03
 
-# NursePings has a TTL index (expireAfterSeconds: 7200) on created_at.
-# If we seed with old timestamps, Mongo's background TTL monitor will
-# delete most of them within ~60 seconds of insertion. To keep seeded
-# data alive long enough to query/demo, we cluster created_at within
-# the last ~100 minutes (under the 2-hour TTL window) instead of
-# spreading it over days.
 PING_MAX_AGE_MINUTES = 100
 
 REVIEW_TAGS = [

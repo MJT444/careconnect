@@ -1,0 +1,799 @@
+{
+  "workflow3_geonear": {
+    "explainVersion": "1",
+    "stages": [
+      {
+        "$geoNearCursor": {
+          "queryPlanner": {
+            "namespace": "medical_db.NursePings",
+            "indexFilterSet": false,
+            "parsedQuery": {
+              "$and": [
+                {
+                  "status": {
+                    "$eq": "ACTIVE"
+                  }
+                },
+                {
+                  "location": {
+                    "$nearSphere": {
+                      "type": "Point",
+                      "coordinates": [
+                        78.4867,
+                        17.385
+                      ]
+                    },
+                    "$maxDistance": 5000
+                  }
+                }
+              ]
+            },
+            "queryHash": "7FF1A20D",
+            "planCacheKey": "4BEA8FE8",
+            "maxIndexedOrSolutionsReached": false,
+            "maxIndexedAndSolutionsReached": false,
+            "maxScansToExplodeReached": false,
+            "winningPlan": {
+              "stage": "FETCH",
+              "filter": {
+                "status": {
+                  "$eq": "ACTIVE"
+                }
+              },
+              "inputStage": {
+                "stage": "GEO_NEAR_2DSPHERE",
+                "keyPattern": {
+                  "location": "2dsphere"
+                },
+                "indexName": "location_2dsphere",
+                "indexVersion": 2,
+                "inputStage": {
+                  "stage": "FETCH",
+                  "inputStage": {
+                    "stage": "IXSCAN",
+                    "keyPattern": {
+                      "location": "2dsphere"
+                    },
+                    "indexName": "location_2dsphere",
+                    "isMultiKey": false,
+                    "multiKeyPaths": {
+                      "location": []
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                      "location": [
+                        "[4251398048237748224, 4251398048237748224]",
+                        "[4305441243766194176, 4305441243766194176]",
+                        "[4308537468510011392, 4308537468510011392]",
+                        "[4308695798184411136, 4308695798184411136]",
+                        "[4308696528328851457, 4308696536918786047]",
+                        "[4308696536918786048, 4308696536918786048]",
+                        "[4308696554098655232, 4308696554098655232]",
+                        "[4308696622818131968, 4308696622818131968]",
+                        "[4308696897696038912, 4308696897696038912]",
+                        "[4308700196230922240, 4308700196230922240]",
+                        "[4308703494765805568, 4308703494765805568]",
+                        "[4308703494765805569, 4308704044521619455]",
+                        "[4308704044521619457, 4308704181960572927]",
+                        "[4308704181960572929, 4308704319399526399]",
+                        "[4308704319399526400, 4308704319399526400]",
+                        "[4308704319399526401, 4308704321547010047]",
+                        "[4308704323694493696, 4308704323694493696]",
+                        "[4308704336579395584, 4308704336579395584]",
+                        "[4308704388119003136, 4308704388119003136]",
+                        "[4308704456838479873, 4308704594277433343]",
+                        "[4308704594277433345, 4308705144033247231]",
+                        "[4308705178392985601, 4308705212752723967]",
+                        "[4308705212752723968, 4308705212752723968]",
+                        "[4308705418911154176, 4308705418911154176]",
+                        "[4308705556350107649, 4308705693789061119]",
+                        "[4308705693789061120, 4308705693789061120]",
+                        "[4308705693789061121, 4308705831228014591]",
+                        "[4308705968666968064, 4308705968666968064]",
+                        "[4308706174825398272, 4308706174825398272]",
+                        "[4308706174825398273, 4308706209185136639]",
+                        "[4308706243544875009, 4308706793300688895]",
+                        "[4308706793300688897, 4308706827660427263]",
+                        "[4308706862020165632, 4308706862020165632]",
+                        "[4308706896379904001, 4308706930739642367]",
+                        "[4308707068178595840, 4308707068178595840]",
+                        "[4308707892812316672, 4308707892812316672]",
+                        "[4308708992323944448, 4308708992323944448]",
+                        "[4308748574742544384, 4308748574742544384]",
+                        "[4308818943486722048, 4308818943486722048]",
+                        "[4309944843393564672, 4309944843393564672]"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "rejectedPlans": []
+          },
+          "executionStats": {
+            "executionSuccess": true,
+            "nReturned": 0,
+            "executionTimeMillis": 202,
+            "totalKeysExamined": 0,
+            "totalDocsExamined": 0,
+            "executionStages": {
+              "stage": "FETCH",
+              "filter": {
+                "status": {
+                  "$eq": "ACTIVE"
+                }
+              },
+              "nReturned": 0,
+              "executionTimeMillisEstimate": 192,
+              "works": 18,
+              "advanced": 0,
+              "needTime": 17,
+              "needYield": 0,
+              "saveState": 7,
+              "restoreState": 7,
+              "isEOF": 1,
+              "docsExamined": 0,
+              "alreadyHasObj": 0,
+              "inputStage": {
+                "stage": "GEO_NEAR_2DSPHERE",
+                "nReturned": 0,
+                "executionTimeMillisEstimate": 192,
+                "works": 18,
+                "advanced": 0,
+                "needTime": 17,
+                "needYield": 0,
+                "saveState": 7,
+                "restoreState": 7,
+                "isEOF": 1,
+                "keyPattern": {
+                  "location": "2dsphere"
+                },
+                "indexName": "location_2dsphere",
+                "indexVersion": 2,
+                "searchIntervals": [
+                  {
+                    "minDistance": 0,
+                    "maxDistance": 5000,
+                    "maxInclusive": true,
+                    "nBuffered": 0,
+                    "nReturned": 0
+                  }
+                ],
+                "inputStage": {
+                  "stage": "FETCH",
+                  "nReturned": 0,
+                  "executionTimeMillisEstimate": 0,
+                  "works": 1,
+                  "advanced": 0,
+                  "needTime": 0,
+                  "needYield": 0,
+                  "saveState": 0,
+                  "restoreState": 0,
+                  "isEOF": 1,
+                  "docsExamined": 0,
+                  "alreadyHasObj": 0,
+                  "inputStage": {
+                    "stage": "IXSCAN",
+                    "nReturned": 0,
+                    "executionTimeMillisEstimate": 0,
+                    "works": 1,
+                    "advanced": 0,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 0,
+                    "restoreState": 0,
+                    "isEOF": 1,
+                    "keyPattern": {
+                      "location": "2dsphere"
+                    },
+                    "indexName": "location_2dsphere",
+                    "isMultiKey": false,
+                    "multiKeyPaths": {
+                      "location": []
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                      "location": [
+                        "[4251398048237748224, 4251398048237748224]",
+                        "[4305441243766194176, 4305441243766194176]",
+                        "[4308537468510011392, 4308537468510011392]",
+                        "[4308695798184411136, 4308695798184411136]",
+                        "[4308696528328851457, 4308696536918786047]",
+                        "[4308696536918786048, 4308696536918786048]",
+                        "[4308696554098655232, 4308696554098655232]",
+                        "[4308696622818131968, 4308696622818131968]",
+                        "[4308696897696038912, 4308696897696038912]",
+                        "[4308700196230922240, 4308700196230922240]",
+                        "[4308703494765805568, 4308703494765805568]",
+                        "[4308703494765805569, 4308704044521619455]",
+                        "[4308704044521619457, 4308704181960572927]",
+                        "[4308704181960572929, 4308704319399526399]",
+                        "[4308704319399526400, 4308704319399526400]",
+                        "[4308704319399526401, 4308704321547010047]",
+                        "[4308704323694493696, 4308704323694493696]",
+                        "[4308704336579395584, 4308704336579395584]",
+                        "[4308704388119003136, 4308704388119003136]",
+                        "[4308704456838479873, 4308704594277433343]",
+                        "[4308704594277433345, 4308705144033247231]",
+                        "[4308705178392985601, 4308705212752723967]",
+                        "[4308705212752723968, 4308705212752723968]",
+                        "[4308705418911154176, 4308705418911154176]",
+                        "[4308705556350107649, 4308705693789061119]",
+                        "[4308705693789061120, 4308705693789061120]",
+                        "[4308705693789061121, 4308705831228014591]",
+                        "[4308705968666968064, 4308705968666968064]",
+                        "[4308706174825398272, 4308706174825398272]",
+                        "[4308706174825398273, 4308706209185136639]",
+                        "[4308706243544875009, 4308706793300688895]",
+                        "[4308706793300688897, 4308706827660427263]",
+                        "[4308706862020165632, 4308706862020165632]",
+                        "[4308706896379904001, 4308706930739642367]",
+                        "[4308707068178595840, 4308707068178595840]",
+                        "[4308707892812316672, 4308707892812316672]",
+                        "[4308708992323944448, 4308708992323944448]",
+                        "[4308748574742544384, 4308748574742544384]",
+                        "[4308818943486722048, 4308818943486722048]",
+                        "[4309944843393564672, 4309944843393564672]"
+                      ]
+                    },
+                    "keysExamined": 0,
+                    "seeks": 1,
+                    "dupsTested": 0,
+                    "dupsDropped": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "nReturned": 0,
+        "executionTimeMillisEstimate": 198
+      },
+      {
+        "$sort": {
+          "sortKey": {
+            "nurse_id": 1,
+            "created_at": -1
+          }
+        },
+        "totalDataSizeSortedBytesEstimate": 0,
+        "usedDisk": false,
+        "spills": 0,
+        "spilledDataStorageSize": 0,
+        "nReturned": 0,
+        "executionTimeMillisEstimate": 198
+      },
+      {
+        "$group": {
+          "_id": "$nurse_id",
+          "nurse_id": {
+            "$first": "$nurse_id"
+          },
+          "location": {
+            "$first": "$location"
+          },
+          "distance_meters": {
+            "$first": "$distance_meters"
+          },
+          "last_seen": {
+            "$first": "$created_at"
+          },
+          "status": {
+            "$first": "$status"
+          }
+        },
+        "maxAccumulatorMemoryUsageBytes": {
+          "nurse_id": 0,
+          "location": 0,
+          "distance_meters": 0,
+          "last_seen": 0,
+          "status": 0
+        },
+        "totalOutputDataSizeBytes": 0,
+        "usedDisk": false,
+        "spills": 0,
+        "spilledDataStorageSize": 0,
+        "numBytesSpilledEstimate": 0,
+        "spilledRecords": 0,
+        "nReturned": 0,
+        "executionTimeMillisEstimate": 198
+      },
+      {
+        "$sort": {
+          "sortKey": {
+            "distance_meters": 1
+          },
+          "limit": 1
+        },
+        "totalDataSizeSortedBytesEstimate": 0,
+        "usedDisk": false,
+        "spills": 0,
+        "spilledDataStorageSize": 0,
+        "nReturned": 0,
+        "executionTimeMillisEstimate": 198
+      },
+      {
+        "$project": {
+          "nurse_id": true,
+          "last_seen": true,
+          "location": true,
+          "distance_meters": {
+            "$round": [
+              "$distance_meters",
+              {
+                "$const": 1
+              }
+            ]
+          },
+          "distance_km": {
+            "$round": [
+              {
+                "$divide": [
+                  "$distance_meters",
+                  {
+                    "$const": 1000
+                  }
+                ]
+              },
+              {
+                "$const": 2
+              }
+            ]
+          },
+          "_id": false
+        },
+        "nReturned": 0,
+        "executionTimeMillisEstimate": 198
+      }
+    ],
+    "serverInfo": {
+      "host": "DESKTOP-DI1DDJP",
+      "port": 27017,
+      "version": "7.0.12",
+      "gitVersion": "b6513ce0781db6818e24619e8a461eae90bc94fc"
+    },
+    "serverParameters": {
+      "internalQueryFacetBufferSizeBytes": 104857600,
+      "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+      "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+      "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+      "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+      "internalQueryProhibitBlockingMergeOnMongoS": 0,
+      "internalQueryMaxAddToSetBytes": 104857600,
+      "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+      "internalQueryFrameworkControl": "trySbeRestricted"
+    },
+    "command": {
+      "aggregate": "NursePings",
+      "pipeline": [
+        {
+          "$geoNear": {
+            "near": {
+              "type": "Point",
+              "coordinates": [
+                78.4867,
+                17.385
+              ]
+            },
+            "distanceField": "distance_meters",
+            "maxDistance": 5000,
+            "spherical": true,
+            "query": {
+              "status": "ACTIVE"
+            }
+          }
+        },
+        {
+          "$sort": {
+            "nurse_id": 1,
+            "created_at": -1
+          }
+        },
+        {
+          "$group": {
+            "_id": "$nurse_id",
+            "nurse_id": {
+              "$first": "$nurse_id"
+            },
+            "location": {
+              "$first": "$location"
+            },
+            "distance_meters": {
+              "$first": "$distance_meters"
+            },
+            "last_seen": {
+              "$first": "$created_at"
+            },
+            "status": {
+              "$first": "$status"
+            }
+          }
+        },
+        {
+          "$sort": {
+            "distance_meters": 1
+          }
+        },
+        {
+          "$limit": 1
+        },
+        {
+          "$project": {
+            "_id": 0,
+            "nurse_id": 1,
+            "distance_meters": {
+              "$round": [
+                "$distance_meters",
+                1
+              ]
+            },
+            "distance_km": {
+              "$round": [
+                {
+                  "$divide": [
+                    "$distance_meters",
+                    1000
+                  ]
+                },
+                2
+              ]
+            },
+            "last_seen": 1,
+            "location": 1
+          }
+        }
+      ],
+      "cursor": {},
+      "$db": "medical_db"
+    },
+    "ok": 1
+  },
+  "workflow4_facet": {
+    "explainVersion": "1",
+    "stages": [
+      {
+        "$cursor": {
+          "queryPlanner": {
+            "namespace": "medical_db.PatientReviews",
+            "indexFilterSet": false,
+            "parsedQuery": {},
+            "queryHash": "E27AE838",
+            "planCacheKey": "E27AE838",
+            "maxIndexedOrSolutionsReached": false,
+            "maxIndexedAndSolutionsReached": false,
+            "maxScansToExplodeReached": false,
+            "winningPlan": {
+              "stage": "PROJECTION_SIMPLE",
+              "transformBy": {
+                "rating": 1,
+                "tags": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "COLLSCAN",
+                "direction": "forward"
+              }
+            },
+            "rejectedPlans": []
+          },
+          "executionStats": {
+            "executionSuccess": true,
+            "nReturned": 20000,
+            "executionTimeMillis": 217,
+            "totalKeysExamined": 0,
+            "totalDocsExamined": 20000,
+            "executionStages": {
+              "stage": "PROJECTION_SIMPLE",
+              "nReturned": 20000,
+              "executionTimeMillisEstimate": 11,
+              "works": 20001,
+              "advanced": 20000,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 21,
+              "restoreState": 21,
+              "isEOF": 1,
+              "transformBy": {
+                "rating": 1,
+                "tags": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "COLLSCAN",
+                "nReturned": 20000,
+                "executionTimeMillisEstimate": 4,
+                "works": 20001,
+                "advanced": 20000,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 21,
+                "restoreState": 21,
+                "isEOF": 1,
+                "direction": "forward",
+                "docsExamined": 20000
+              }
+            }
+          }
+        },
+        "nReturned": 20000,
+        "executionTimeMillisEstimate": 70
+      },
+      {
+        "$facet": {
+          "ratingDistribution": [
+            {
+              "$internalFacetTeeConsumer": {},
+              "nReturned": 20000,
+              "executionTimeMillisEstimate": 72
+            },
+            {
+              "$group": {
+                "_id": "$rating",
+                "count": {
+                  "$sum": {
+                    "$const": 1
+                  }
+                }
+              },
+              "maxAccumulatorMemoryUsageBytes": {
+                "count": 480
+              },
+              "totalOutputDataSizeBytes": 1225,
+              "usedDisk": false,
+              "spills": 0,
+              "spilledDataStorageSize": 0,
+              "numBytesSpilledEstimate": 0,
+              "spilledRecords": 0,
+              "nReturned": 5,
+              "executionTimeMillisEstimate": 93
+            },
+            {
+              "$sort": {
+                "sortKey": {
+                  "_id": 1
+                }
+              },
+              "totalDataSizeSortedBytesEstimate": 1265,
+              "usedDisk": false,
+              "spills": 0,
+              "spilledDataStorageSize": 0,
+              "nReturned": 5,
+              "executionTimeMillisEstimate": 93
+            },
+            {
+              "$project": {
+                "count": true,
+                "rating": "$_id",
+                "_id": false
+              },
+              "nReturned": 5,
+              "executionTimeMillisEstimate": 93
+            }
+          ],
+          "topTags": [
+            {
+              "$internalFacetTeeConsumer": {},
+              "nReturned": 20000,
+              "executionTimeMillisEstimate": 0
+            },
+            {
+              "$unwind": {
+                "path": "$tags"
+              },
+              "nReturned": 40096,
+              "executionTimeMillisEstimate": 39
+            },
+            {
+              "$group": {
+                "_id": "$tags",
+                "count": {
+                  "$sum": {
+                    "$const": 1
+                  }
+                }
+              },
+              "maxAccumulatorMemoryUsageBytes": {
+                "count": 1344
+              },
+              "totalOutputDataSizeBytes": 3709,
+              "usedDisk": false,
+              "spills": 0,
+              "spilledDataStorageSize": 0,
+              "numBytesSpilledEstimate": 0,
+              "spilledRecords": 0,
+              "nReturned": 14,
+              "executionTimeMillisEstimate": 84
+            },
+            {
+              "$sort": {
+                "sortKey": {
+                  "count": -1
+                },
+                "limit": 10
+              },
+              "totalDataSizeSortedBytesEstimate": 2691,
+              "usedDisk": false,
+              "spills": 0,
+              "spilledDataStorageSize": 0,
+              "nReturned": 10,
+              "executionTimeMillisEstimate": 84
+            },
+            {
+              "$project": {
+                "count": true,
+                "tag": "$_id",
+                "_id": false
+              },
+              "nReturned": 10,
+              "executionTimeMillisEstimate": 84
+            }
+          ],
+          "overallAverage": [
+            {
+              "$internalFacetTeeConsumer": {},
+              "nReturned": 20000,
+              "executionTimeMillisEstimate": 26
+            },
+            {
+              "$group": {
+                "_id": {
+                  "$const": null
+                },
+                "averageRating": {
+                  "$avg": "$rating"
+                },
+                "totalReviews": {
+                  "$sum": {
+                    "$const": 1
+                  }
+                }
+              },
+              "maxAccumulatorMemoryUsageBytes": {
+                "averageRating": 104,
+                "totalReviews": 96
+              },
+              "totalOutputDataSizeBytes": 277,
+              "usedDisk": false,
+              "spills": 0,
+              "spilledDataStorageSize": 0,
+              "numBytesSpilledEstimate": 0,
+              "spilledRecords": 0,
+              "nReturned": 1,
+              "executionTimeMillisEstimate": 37
+            },
+            {
+              "$project": {
+                "totalReviews": true,
+                "averageRating": {
+                  "$round": [
+                    "$averageRating",
+                    {
+                      "$const": 2
+                    }
+                  ]
+                },
+                "_id": false
+              },
+              "nReturned": 1,
+              "executionTimeMillisEstimate": 37
+            }
+          ]
+        },
+        "nReturned": 1,
+        "executionTimeMillisEstimate": 214
+      }
+    ],
+    "serverInfo": {
+      "host": "DESKTOP-DI1DDJP",
+      "port": 27017,
+      "version": "7.0.12",
+      "gitVersion": "b6513ce0781db6818e24619e8a461eae90bc94fc"
+    },
+    "serverParameters": {
+      "internalQueryFacetBufferSizeBytes": 104857600,
+      "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+      "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+      "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+      "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+      "internalQueryProhibitBlockingMergeOnMongoS": 0,
+      "internalQueryMaxAddToSetBytes": 104857600,
+      "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+      "internalQueryFrameworkControl": "trySbeRestricted"
+    },
+    "command": {
+      "aggregate": "PatientReviews",
+      "pipeline": [
+        {
+          "$facet": {
+            "ratingDistribution": [
+              {
+                "$group": {
+                  "_id": "$rating",
+                  "count": {
+                    "$sum": 1
+                  }
+                }
+              },
+              {
+                "$sort": {
+                  "_id": 1
+                }
+              },
+              {
+                "$project": {
+                  "_id": 0,
+                  "rating": "$_id",
+                  "count": 1
+                }
+              }
+            ],
+            "topTags": [
+              {
+                "$unwind": "$tags"
+              },
+              {
+                "$group": {
+                  "_id": "$tags",
+                  "count": {
+                    "$sum": 1
+                  }
+                }
+              },
+              {
+                "$sort": {
+                  "count": -1
+                }
+              },
+              {
+                "$limit": 10
+              },
+              {
+                "$project": {
+                  "_id": 0,
+                  "tag": "$_id",
+                  "count": 1
+                }
+              }
+            ],
+            "overallAverage": [
+              {
+                "$group": {
+                  "_id": null,
+                  "averageRating": {
+                    "$avg": "$rating"
+                  },
+                  "totalReviews": {
+                    "$sum": 1
+                  }
+                }
+              },
+              {
+                "$project": {
+                  "_id": 0,
+                  "averageRating": {
+                    "$round": [
+                      "$averageRating",
+                      2
+                    ]
+                  },
+                  "totalReviews": 1
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "cursor": {},
+      "$db": "medical_db"
+    },
+    "ok": 1
+  }
+}
