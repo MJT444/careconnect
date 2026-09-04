@@ -3,7 +3,7 @@
 ## Repository Submission Details
 
 - GitHub repository: https://github.com/MJT444/careconnect
-- Final commit hash: ``
+- Final commit hash: `fa841f6e3386597405c5dfdcdbfca96ca72a17f7`
 
 ## Overview
 
