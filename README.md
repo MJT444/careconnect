@@ -1,10 +1,10 @@
-# Hospital Appointment & HSA Management Database
+# CareConnect Database
 
 ## Overview
 
-This project implements a PostgreSQL-based hospital appointment and HSA (Health Savings Account) management system.
+This project implements CareConnect's healthcare database across PostgreSQL and MongoDB. PostgreSQL manages the relational hospital appointment and HSA (Health Savings Account) system, while MongoDB supports real-time nurse location queries and patient review analytics.
 
-It demonstrates database concepts including relational schema design, constraints, indexes, triggers, stored procedures, materialized views, and window functions.
+It demonstrates relational schema design, constraints, indexes, triggers, stored procedures, materialized views, window functions, geospatial aggregation, TTL data retention, and multi-faceted analytics.
 
 ---
 
@@ -18,7 +18,20 @@ sql/
 ├── 04_stored_procedures.sql
 ├── 05_materialized_views.sql
 └── 06_window_analytics.sql
+
+mongo/
+├── 01_collections_and_indexes.js
+├── 02_workflow3_geonear.js
+└── 03_workflow4_facet.js
+
+performance/
+├── mongo_execution_stats.json
+└── postgres_explain_analyzes.txt
 ```
+
+---
+
+## PostgreSQL
 
 ---
 
@@ -280,7 +293,7 @@ The query produces:
 
 ---
 
-## Database Concepts Demonstrated
+## PostgreSQL Concepts Demonstrated
 
 This project demonstrates the following PostgreSQL concepts:
 
@@ -358,3 +371,142 @@ The database provides:
 - Advanced analytics through PostgreSQL window functions
 
 Together, these components demonstrate a robust PostgreSQL database design for managing healthcare appointments, patient HSA funds, financial auditing, and clinic revenue analytics.
+
+---
+
+## MongoDB Workflows
+
+The MongoDB scripts use the `medical_db` database and implement Workflows 3 and 4 of the assignment.
+
+### Collections
+
+#### `NursePings`
+
+Stores real-time geospatial location logs for mobile nurses. The collection is created by `mongo/01_collections_and_indexes.js` with:
+
+- A `2dsphere` index on `location`, required by `$geoNear`
+- A TTL index on `created_at` with `expireAfterSeconds: 7200`
+
+Expected document shape:
+
+```json
+{
+  "nurse_id": "<UUID/INT>",
+  "location": { "type": "Point", "coordinates": [lng, lat] },
+  "status": "ACTIVE | OFFLINE",
+  "created_at": "ISODate"
+}
+```
+
+#### `PatientReviews`
+
+Stores patient-submitted reviews of clinics or appointments.
+
+Expected document shape:
+
+```json
+{
+  "patient_id": "<UUID>",
+  "clinic_id": "<UUID>",
+  "rating": "1-5",
+  "tags": ["string", "..."],
+  "created_at": "ISODate"
+}
+```
+
+Neither collection has enforced validation. These field names are the contracts expected by the aggregation scripts; update the pipelines if the seeder scripts use different names.
+
+### Workflow 3 — Nearest Mobile Nurse
+
+`mongo/02_workflow3_geonear.js` finds the closest currently active nurse for coordinates supplied by the client application.
+
+- Patient coordinates are not stored in PostgreSQL. The script uses the example `patientLng` and `patientLat` values at the top of the file.
+- The search radius is capped at 5 km using `maxDistanceMeters = 5000`.
+- The pipeline filters to `status: "ACTIVE"`, finds pings within the radius, keeps each nurse's most recent ping, sorts by distance, and returns the closest nurse.
+- `$geoNear` requires the `NursePings.location` `2dsphere` index; without it, the stage cannot run.
+
+Execute it with:
+
+```bash
+mongosh "mongodb://admin:password@localhost:27017/medical_db?authSource=admin" mongo/02_workflow3_geonear.js
+```
+
+### Workflow 4 — Multi-Faceted Review Analytics
+
+`mongo/03_workflow4_facet.js` computes three statistics over `PatientReviews` in one aggregation using `$facet`:
+
+1. `ratingDistribution` counts reviews for each star rating from 1 to 5.
+2. `topTags` unwinds `tags`, counts tag occurrences, and returns the 10 most frequent tags.
+3. `overallAverage` calculates the mean rating and total review count.
+
+`$facet` scans the full input collection for each sub-pipeline by design. There is no equivalent index requirement to `$geoNear`; the explain proof should demonstrate correctness and reasonable execution time at 100k+ scale.
+
+Execute it with:
+
+```bash
+mongosh "mongodb://admin:password@localhost:27017/medical_db?authSource=admin" mongo/03_workflow4_facet.js
+```
+
+### MongoDB Explain Plans
+
+Detailed execution statistics are saved in `performance/mongo_execution_stats.json`.
+
+#### Workflow 3
+
+- Uses the `GEO_NEAR_2DSPHERE` stage backed by the `location_2dsphere` index.
+- Applies an additional `FETCH` filter for active status.
+- Sorts by distance and limits the result to one nurse.
+
+#### Workflow 4
+
+- Starts with a `COLLSCAN` because `$facet` must scan the full input to compute all analytics.
+- Projects `rating` and `tags` before splitting into three parallel sub-pipelines.
+- Uses grouping and sorting for `ratingDistribution`, unwinding followed by grouping, sorting, and limiting for `topTags`, and grouping for `overallAverage`.
+
+---
+
+## Combined Execution Order
+
+Run the PostgreSQL files in this order because later files depend on objects created earlier:
+
+```text
+sql/01_schema_ddl.sql
+        ↓
+sql/02_indexes.sql
+        ↓
+sql/03_triggers_and_audit.sql
+        ↓
+sql/04_stored_procedures.sql
+        ↓
+sql/05_materialized_views.sql
+        ↓
+sql/06_window_analytics.sql
+```
+
+Initialize MongoDB collections and indexes before running its workflows:
+
+```bash
+mongosh "mongodb://admin:password@localhost:27017/medical_db?authSource=admin" mongo/01_collections_and_indexes.js
+```
+
+---
+
+## Requirements
+
+- PostgreSQL with the `pgcrypto` extension
+- MongoDB and `mongosh`
+- MongoDB database: `medical_db`
+
+If required, enable PostgreSQL UUID generation with:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+```
+
+The MongoDB commands assume the local connection string shown above. Update the credentials or host as needed.
+
+---
+
+## Summary
+
+CareConnect combines PostgreSQL's transactional relational model with MongoDB's geospatial and aggregation capabilities. PostgreSQL provides data integrity, concurrency protection, financial auditing, efficient reporting, and revenue analytics. MongoDB provides expiring nurse location data, nearest-active-nurse discovery, and review analytics through a single `$facet` pipeline.
