@@ -1,5 +1,10 @@
 # CareConnect Database
 
+## Repository Submission Details
+
+- GitHub repository: https://github.com/MJT444/careconnect
+- Final commit hash: ``
+
 ## Overview
 
 This project implements CareConnect's healthcare database across PostgreSQL and MongoDB. PostgreSQL manages the relational hospital appointment and HSA (Health Savings Account) system, while MongoDB supports real-time nurse location queries and patient review analytics.
@@ -319,58 +324,6 @@ This project demonstrates the following PostgreSQL concepts:
 - `DENSE_RANK()`
 - Transaction-safe HSA deductions
 - Query performance optimization
-
----
-
-## Execution Order
-
-The SQL files should be executed in the following order:
-
-```
-01_schema_ddl.sql
-        ↓
-02_indexes.sql
-        ↓
-03_triggers_and_audit.sql
-        ↓
-04_stored_procedures.sql
-        ↓
-05_materialized_views.sql
-        ↓
-06_window_analytics.sql
-```
-
-The order is important because later files depend on database objects created in earlier files.
-
----
-
-## Requirements
-
-- PostgreSQL
-- `pgcrypto` extension for UUID generation using `gen_random_uuid()`
-
-If required, enable the extension with:
-
-```sql
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
-```
-
----
-
-## Summary
-
-The project models a healthcare appointment system where patients maintain HSA balances that can be used to pay appointment copays.
-
-The database provides:
-
-- Data integrity through constraints and foreign keys
-- Concurrency protection through row-level locking
-- Automatic financial auditing through triggers
-- Efficient querying through indexes
-- Precomputed reporting through materialized views
-- Advanced analytics through PostgreSQL window functions
-
-Together, these components demonstrate a robust PostgreSQL database design for managing healthcare appointments, patient HSA funds, financial auditing, and clinic revenue analytics.
 
 ---
 
